@@ -74,7 +74,25 @@ resource "aws_instance" "dev_node" {
   subnet_id              = aws_subnet.public_subnet.id
   vpc_security_group_ids = [aws_security_group.public_sg.id]
   user_data              = file("userdata.tpl")
+
   tags = {
     Name = "dev-node"
   }
+
+  provisioner "local-exec" {
+    command = templatefile("linux-ssh-config.tpl", {
+      hostname: self.public_ip,
+      user: "ubuntu",
+      identityfile: "~/.ssh/aws_id_ed25519"
+    })
+    interpreter = ["bash", "-c"]
+  }  
+  # provisioner "local-exec" {
+  #   command = templatefile("windows-ssh-config.tpl", {
+  #     hostname: self.public_ip,
+  #     user: "ubuntu",
+  #     identityfile: "~/.ssh/aws_id_ed25519"
+  #   })
+  #   interpreter = ["powershell", "-command"]
+  # }
 }
