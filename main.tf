@@ -55,7 +55,7 @@ resource "aws_security_group" "public_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = [replace(data.http.my_ip.response_body, "\n", "/32")] 
+    cidr_blocks = [replace(data.http.my_ip.response_body, "\n", "/32")]
   }
 
   egress {
@@ -84,19 +84,11 @@ resource "aws_instance" "dev_node" {
   }
 
   provisioner "local-exec" {
-    command = templatefile("linux-ssh-config.tpl", {
-      hostname: self.public_ip,
-      user: "ubuntu",
-      identityfile: "~/.ssh/aws_id_ed25519"
+    command = templatefile("${var.host_os}-ssh-config.tpl", {
+      hostname : self.public_ip,
+      user : "ubuntu",
+      identityfile : "~/.ssh/aws_id_ed25519"
     })
-    interpreter = ["bash", "-c"]
-  }  
-  # provisioner "local-exec" {
-  #   command = templatefile("windows-ssh-config.tpl", {
-  #     hostname: self.public_ip,
-  #     user: "ubuntu",
-  #     identityfile: "~/.ssh/aws_id_ed25519"
-  #   })
-  #   interpreter = ["powershell", "-command"]
-  # }
+    interpreter = var.host_os == "windows" ? ["PowerShell", "-Command"] : ["/bin/bash", "-c"]
+  }
 }
