@@ -42,6 +42,10 @@ resource "aws_route_table_association" "public_subnet_association" {
   route_table_id = aws_route_table.public_route_table.id
 }
 
+data "http" "my_ip" {
+  url = "http://checkip.amazonaws.com/"
+}
+
 resource "aws_security_group" "public_sg" {
   name        = "dev-public-sg"
   description = "dev sec. group"
@@ -51,7 +55,7 @@ resource "aws_security_group" "public_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["47.54.218.58/32"]
+    cidr_blocks = [replace(data.http.my_ip.response_body, "\n", "/32")] 
   }
 
   egress {

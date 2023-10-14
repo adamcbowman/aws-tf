@@ -1,0 +1,4 @@
+terraform.tfstate
+terraform.tfstate.backup
+terraform-provider-* # terraform plugins
+terraform.lock.hcl
