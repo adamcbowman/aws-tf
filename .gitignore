@@ -2,3 +2,5 @@ terraform.tfstate
 terraform.tfstate.backup
 terraform-provider-* # terraform plugins
 .terraform.lock.hcl
+.terraform/providers/registry.terraform.io/hashicorp/aws/5.21.0/darwin_arm64/terraform-provider-aws_v5.21.0_x5
+.terraform/providers/registry.terraform.io/hashicorp/http/3.4.0/darwin_arm64/terraform-provider-http_v3.4.0_x5
